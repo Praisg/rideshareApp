@@ -25,7 +25,7 @@
 - **Purpose**: MongoDB database connection string
 - **Format**: 
   - Local: `mongodb://127.0.0.1:27017/rideshare`
-  - Atlas: `mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority`
+  - Atlas: `mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
 - **Where to get**: 
   - Local: Install MongoDB locally
   - Atlas: Create account at https://www.mongodb.com/cloud/atlas

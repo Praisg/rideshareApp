@@ -17,7 +17,7 @@ Both config files are in place:
 
 ### Code Configuration (firebase.ts)
 - **Project ID**: `kwendash-dbf13` ❌ (different!)
-- **API Key**: `YOUR_FIREBASE_WEB_API_KEY`
+- **API Key**: `YOUR_FIREBASE_API_KEY` (set in .env file)
 - **Auth Domain**: `kwendash-dbf13.firebaseapp.com`
 - **Messaging Sender ID**: `269847145872`
 - **App ID**: `1:269847145872:web:597b75e6b451c5867a9715`
@@ -32,7 +32,7 @@ Update `client/src/config/firebase.ts` to use the project from your config files
 
 ```typescript
 const firebaseConfig = {
-  apiKey: "YOUR_FIREBASE_WEB_API_KEY", // From Firebase Console > Project Settings > General > Your apps > Web app
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY, // From .env file
   authDomain: "rideshare-bd747.firebaseapp.com",
   projectId: "rideshare-bd747", // Match config files
   storageBucket: "rideshare-bd747.firebasestorage.app",

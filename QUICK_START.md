@@ -29,7 +29,7 @@ MONGO_URI=mongodb://localhost:27017/ride_app
 
 Or use MongoDB Atlas:
 ```
-MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/ride_app
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
 ```
 
 ### Step 3: Start Everything

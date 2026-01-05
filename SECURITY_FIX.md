@@ -2,7 +2,7 @@
 
 ## What Was Fixed
 
-The Firebase API key `AIzaSyCEGxinASLuWazGKRywi7YADLDKDs4KCwg` was hardcoded in `client/src/config/firebase.ts` and was committed to git history.
+The Firebase API key `YOUR_GOOGLE_MAPS_API_KEY was hardcoded in `client/src/config/firebase.ts` and was committed to git history.
 
 ## Actions Taken
 

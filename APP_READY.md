@@ -16,14 +16,14 @@ All setup is complete and your app is ready to run!
 
 #### MongoDB
 ```
-URI: mongodb+srv://marvingoreedu_db_user:***@cluster0.gywqacy.mongodb.net/ride_app
+URI: mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
 Database: ride_app
 Status: Connected
 ```
 
 #### Google Maps API
 ```
-API Key: AIzaSyCh1ybEuYu7ypDnz0JUrHHdVVDZPh8zJRs
+API Key: YOUR_GOOGLE_MAPS_API_KEY
 Configured in:
   - app.json (iOS)
   - app.json (Android)

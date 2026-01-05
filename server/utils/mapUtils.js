@@ -1,6 +1,16 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
 
+dotenv.config();
+
+// Fallback to the API key from .env, with a warning if missing
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || '';
+
+if (!GOOGLE_MAPS_API_KEY) {
+  console.warn('⚠️  WARNING: GOOGLE_MAPS_API_KEY is not set in server/.env');
+  console.warn('   Map functionality (reverse geocoding, places API) will not work.');
+  console.warn('   Add GOOGLE_MAPS_API_KEY=your_key to server/.env');
+}
 
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;

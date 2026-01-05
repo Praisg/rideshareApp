@@ -66,7 +66,7 @@ if (!admin.apps.length && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREB
 **Config**:
 ```typescript
 {
-  apiKey: "YOUR_FIREBASE_WEB_API_KEY",
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY, // From .env file
   authDomain: "kwendash-dbf13.firebaseapp.com",
   projectId: "kwendash-dbf13",
   // ... other config

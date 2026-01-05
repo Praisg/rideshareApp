@@ -77,7 +77,7 @@ MONGO_URI=mongodb://localhost:27017/ride_app
 
 ### Format:
 ```
-mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
+mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
 ```
 
 ### Your Cluster Details:

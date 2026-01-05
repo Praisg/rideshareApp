@@ -100,14 +100,14 @@ cd /Users/malvin/Desktop/RIDE/client && npm run ios
 
 ### MongoDB Atlas
 ```
-Connection: mongodb+srv://marvingoreedu_db_user:***@cluster0.gywqacy.mongodb.net/ride_app
+Connection: mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
 Database: ride_app
 Collections: users, rides
 ```
 
 ### Google Maps API
 ```
-Key: AIzaSyCh1ybEuYu7ypDnz0JUrHHdVVDZPh8zJRs
+Key: YOUR_GOOGLE_MAPS_API_KEY
 Enabled APIs:
   - Maps SDK for iOS
   - Maps SDK for Android
