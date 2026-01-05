@@ -16,7 +16,7 @@ All setup is complete and your app is ready to run!
 
 #### MongoDB
 ```
-URI: mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
+URI: mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/rideshare?retryWrites=true&w=majority
 Database: ride_app
 Status: Connected
 ```

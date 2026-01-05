@@ -100,7 +100,7 @@ cd /Users/malvin/Desktop/RIDE/client && npm run ios
 
 ### MongoDB Atlas
 ```
-Connection: mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
+Connection: mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/rideshare?retryWrites=true&w=majority
 Database: ride_app
 Collections: users, rides
 ```

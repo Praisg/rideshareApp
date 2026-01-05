@@ -36,7 +36,7 @@ MONGO_URI=mongodb://127.0.0.1:27017/rideshare
 
 Example:
 ```bash
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/rideshare?retryWrites=true&w=majority
 ```
 
 ### 2. JWT Secrets

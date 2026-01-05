@@ -17,7 +17,7 @@ cat > .env.example << 'EOF'
 # ============================================
 # MongoDB connection string
 # Local: mongodb://127.0.0.1:27017/rideshare
-# Atlas: mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
+# Atlas: mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/rideshare?retryWrites=true&w=majority
 MONGO_URI=mongodb://127.0.0.1:27017/rideshare
 
 # ============================================

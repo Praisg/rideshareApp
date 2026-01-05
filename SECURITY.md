@@ -45,7 +45,8 @@ All sensitive information has been removed from the codebase and moved to enviro
 
 2. **Fill in your values in `server/.env`:**
    ```bash
-   MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/rideshare
+   # Replace <username>, <password>, and <cluster-name> with your actual values
+   MONGO_URI=mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/rideshare
    GOOGLE_MAPS_API_KEY=your_actual_google_maps_api_key
    ACCESS_TOKEN_SECRET=your_generated_secret
    # ... other variables

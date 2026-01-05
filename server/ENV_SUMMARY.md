@@ -41,7 +41,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 MONGO_URI=mongodb://127.0.0.1:27017/rideshare
 
 # Atlas
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/rideshare?retryWrites=true&w=majority
 ```
 
 ### Firebase Private Key Format

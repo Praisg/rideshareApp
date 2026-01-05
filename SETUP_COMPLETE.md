@@ -27,7 +27,7 @@ MONGO_URI=mongodb://localhost:27017/ride_app
 
 For MongoDB Atlas:
 ```
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/rideshare?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/rideshare?retryWrites=true&w=majority
 ```
 
 ### 2. Configure Google Maps API Key

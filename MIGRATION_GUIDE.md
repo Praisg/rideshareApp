@@ -60,7 +60,7 @@ EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 **Server `.env`:**
 ```bash
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/rideshare
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/rideshare
 GOOGLE_MAPS_API_KEY=your_actual_google_maps_api_key
 ACCESS_TOKEN_SECRET=your_generated_secret_64_chars
 REFRESH_TOKEN_SECRET=your_generated_secret_64_chars
