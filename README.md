@@ -1,14 +1,8 @@
 # 🚗 RIDE - Full-Stack Rideshare Platform
-<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 18 05 21" src="https://github.com/user-attachments/assets/283b3d87-6836-467b-9fe8-333e90a67830" />
-<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 18 05 15" src="https://github.com/user-attachments/assets/91f4671b-b584-4c44-867d-2b072e305edc" />
-<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 18 04 58" src="https://github.com/user-attachments/assets/bba6d6d3-8f93-4053-b2ac-b18dd78fdd18" />
-<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 18 04 21" src="https://github.com/user-attachments/assets/52ab6661-4806-47d5-b4a2-a8b41cbeffc0" />
+
 <img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 18 04 11" src="https://github.com/user-attachments/assets/4a70f561-40a3-446e-81bb-21c5ca6fa83a" />
 <img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 18 02 29" src="https://github.com/user-attachments/assets/d9dcbc7c-5c43-4c4a-b4e3-f22e33d30b88" />
-<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 18 03 46" src="https://github.com/user-attachments/assets/27856199-b40c-44b1-827e-c63f8606dc37" />
-<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 17 40 27" src="https://github.com/user-attachments/assets/97546e9b-6ca5-4c50-ae0d-aaeaf4c6efc3" />
-<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 17 40 21" src="https://github.com/user-attachments/assets/6872533a-9ecb-4d97-aeac-832e4999cf29" />
-<img width="1206" height="2622" alt="Simulator Screenshot - iPhone 16 Pro - 2026-01-04 at 17 40 31" src="https://github.com/user-attachments/assets/94813ae3-6c23-4e13-ac1d-adb5c3410821" />
+
 A modern, real-time rideshare application built with React Native (Expo) and Node.js, featuring live tracking, KYC verification, and dynamic earnings for drivers.
 
 ## 📱 Overview
