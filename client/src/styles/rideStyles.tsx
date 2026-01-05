@@ -72,7 +72,6 @@ export const rideStyles = StyleSheet.create({
         resizeMode: 'contain'
     },
     scrollContainer: {
-        flexGrow: 1,
         paddingBottom: 160,
         width: screenWidth,
         borderColor: '#777',

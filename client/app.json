@@ -16,13 +16,13 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.ritik.rideapp",
       "config": {
-        "googleMapsApiKey": "AIzaSyCh1ybEuYu7ypDnz0JUrHHdVVDZPh8zJRs"
+        "googleMapsApiKey": "${EXPO_PUBLIC_MAP_API_KEY}"
             }
     },
     "android": {
       "config": {
                 "googleMaps": {
-          "apiKey": "AIzaSyCh1ybEuYu7ypDnz0JUrHHdVVDZPh8zJRs"
+          "apiKey": "${EXPO_PUBLIC_MAP_API_KEY}"
                 }
             },
       "adaptiveIcon": {

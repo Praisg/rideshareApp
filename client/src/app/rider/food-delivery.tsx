@@ -203,11 +203,7 @@ const FoodDeliveryScreen = () => {
         </View>
       </View>
 
-      <ScrollView 
-        style={styles.content} 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.destinationCard}>
           <View style={styles.destinationHeader}>
             <CustomText fontFamily="SemiBold" fontSize={16}>
@@ -404,10 +400,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 120,
   },
   destinationCard: {
     backgroundColor: Colors.white,

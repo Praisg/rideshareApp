@@ -137,11 +137,7 @@ const BiddingScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView 
-        style={styles.content} 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.statusSection}>
           <View style={styles.pulseContainer}>
             <View style={styles.pulseOuter} />
@@ -253,10 +249,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 40,
   },
   statusSection: {
     alignItems: 'center',

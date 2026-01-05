@@ -139,10 +139,9 @@ const CustomerHome = () => {
         </View>
 
         <ScrollView
-          style={styles.scrollView}
+          style={styles.content}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
-          nestedScrollEnabled={true}
         >
           {activeTab === "rides" ? (
             <>
@@ -253,7 +252,6 @@ const CustomerHome = () => {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.cuisineScroll}
-                  nestedScrollEnabled={true}
                 >
                   {cuisines.filter(c => c !== 'All').slice(0, 8).map((cuisine) => (
                     <TouchableOpacity
@@ -401,11 +399,7 @@ const CustomerHome = () => {
         </View>
       </SafeAreaView>
 
-      <RideHistoryModal 
-        visible={showRideHistory} 
-        onClose={() => setShowRideHistory(false)}
-        userRole="customer"
-      />
+      <RideHistoryModal visible={showRideHistory} onClose={() => setShowRideHistory(false)} />
     </View>
   );
 };
@@ -445,11 +439,10 @@ const styles = StyleSheet.create({
   activeTabText: {
     color: Colors.text,
   },
-  scrollView: {
+  content: {
     flex: 1,
   },
   scrollContent: {
-    flexGrow: 1,
     paddingBottom: 100,
   },
   searchBar: {

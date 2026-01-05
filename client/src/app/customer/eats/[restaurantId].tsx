@@ -97,11 +97,7 @@ const RestaurantDetailScreen = () => {
     <View style={styles.container}>
       <StatusBar style="light" />
       
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
-        stickyHeaderIndices={[1]}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} stickyHeaderIndices={[1]}>
         <View style={styles.heroContainer}>
           {selectedRestaurant.coverImage || selectedRestaurant.imageUrl ? (
             <Image
@@ -258,10 +254,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 120,
   },
   loadingContainer: {
     flex: 1,

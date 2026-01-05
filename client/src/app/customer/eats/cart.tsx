@@ -136,11 +136,7 @@ const CartScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView 
-        style={styles.content} 
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {restaurant && (
           <View style={styles.restaurantInfo}>
             <Ionicons name="restaurant" size={RFValue(20)} color={Colors.primary} />
@@ -300,10 +296,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 120,
   },
   emptyContainer: {
     flex: 1,

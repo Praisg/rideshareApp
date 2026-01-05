@@ -1,4 +1,4 @@
-import { View, TextInput, StyleSheet, Alert, TouchableOpacity, ScrollView } from "react-native";
+import { View, TextInput, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import React, { useState, useRef } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -59,52 +59,46 @@ const OTPVerify = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.content}>
-          <CustomText variant="h4" fontFamily="Bold" style={styles.title}>
-            Verify OTP
-          </CustomText>
-          <CustomText variant="h7" fontFamily="Regular" style={styles.subtitle}>
-            Enter the 6-digit code sent to {phone}
-          </CustomText>
+      <View style={styles.content}>
+        <CustomText variant="h4" fontFamily="Bold" style={styles.title}>
+          Verify OTP
+        </CustomText>
+        <CustomText variant="h7" fontFamily="Regular" style={styles.subtitle}>
+          Enter the 6-digit code sent to {phone}
+        </CustomText>
 
-          <View style={styles.otpContainer}>
-            {otp.map((digit, index) => (
-              <TextInput
-                key={index}
-                ref={(ref) => (inputs.current[index] = ref)}
-                style={styles.otpInput}
-                value={digit}
-                onChangeText={(text) => handleOTPChange(text, index)}
-                onKeyPress={(e) => handleKeyPress(e, index)}
-                keyboardType="number-pad"
-                maxLength={1}
-                selectTextOnFocus
-              />
-            ))}
-          </View>
-
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={styles.resendContainer}
-          >
-            <CustomText variant="h8" fontFamily="Medium" style={styles.resendText}>
-              Didn't receive code? Resend
-            </CustomText>
-          </TouchableOpacity>
-
-          <CustomButton
-            title="Verify"
-            onPress={handleVerify}
-            loading={loading}
-            disabled={loading}
-          />
+        <View style={styles.otpContainer}>
+          {otp.map((digit, index) => (
+            <TextInput
+              key={index}
+              ref={(ref) => (inputs.current[index] = ref)}
+              style={styles.otpInput}
+              value={digit}
+              onChangeText={(text) => handleOTPChange(text, index)}
+              onKeyPress={(e) => handleKeyPress(e, index)}
+              keyboardType="number-pad"
+              maxLength={1}
+              selectTextOnFocus
+            />
+          ))}
         </View>
-      </ScrollView>
+
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.resendContainer}
+        >
+          <CustomText variant="h8" fontFamily="Medium" style={styles.resendText}>
+            Didn't receive code? Resend
+          </CustomText>
+        </TouchableOpacity>
+
+        <CustomButton
+          title="Verify"
+          onPress={handleVerify}
+          loading={loading}
+          disabled={loading}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -114,14 +108,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
-  scrollContent: {
-    flexGrow: 1,
-  },
   content: {
     flex: 1,
     paddingHorizontal: 20,
     justifyContent: "center",
-    minHeight: "100%",
   },
   title: {
     textAlign: "center",
