@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyCh1ybEuYu7ypDnz0JUrHHdVVDZPh8zJRs';
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || '';
 
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;

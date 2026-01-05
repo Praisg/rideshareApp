@@ -1,0 +1,53 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+server/.env
+client/.env
+
+# Sensitive documentation files
+**/FIREBASE_CONFIG_CHECK.md
+**/FIREBASE_AUTH_CHECK.md
+**/ENV_SUMMARY.md
+**/SETUP_ENV.md
+**/ENVIRONMENT_SETUP_COMPLETE.md
+**/QUICK_START.md
+**/SETUP_COMPLETE.md
+**/.env-template*
+**/create-env-files.sh
+
+# API Keys and Secrets
+**/mapUtils.js
+**/seedData.js
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+admin-web/node_modules/
+
+# Build outputs
+dist/
+build/
+*.apk
+*.ipa
+
+# Temporary files
+*.tmp
+*.temp
+
