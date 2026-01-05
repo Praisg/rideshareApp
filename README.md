@@ -1,5 +1,6 @@
 # 🚗 RIDE - Full-Stack Rideshare Platform
-<img width="457" height="917" alt="image" src="https://github.com/user-attachments/assets/8e086e7d-f1e0-4fdd-a2dc-b2b1f2b51412" />
+<img width="457" height="917" alt="image" src="https://github.com/user-attachments/assets/8e086e7d-f1e0-4fdd-a2dc-b2b1f2b51412" /> <img width="453" height="907" alt="image" src="https://github.com/user-attachments/assets/26690d46-f5b2-47e3-b616-8b9972c01375" />
+
 
 
 A modern, real-time rideshare application built with React Native (Expo) and Node.js, featuring live tracking, KYC verification, and dynamic earnings for drivers.
