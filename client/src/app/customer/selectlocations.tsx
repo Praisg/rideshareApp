@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  StyleSheet,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useUserStore } from "@/store/userStore";
@@ -21,6 +22,7 @@ import {
   calculateDistance,
   getLatLong,
   getPlacesSuggestions,
+  reverseGeocode,
 } from "@/utils/mapUtils";
 import { locationStyles } from "@/styles/locationStyles";
 import LocationItem from "@/components/customer/LocationItem";
@@ -37,6 +39,7 @@ const LocationSelection = () => {
   const [focusedInput, setFocusedInput] = useState("drop");
   const [modalTitle, setModalTitle] = useState("drop");
   const [isMapModalVisible, setMapModalVisible] = useState(false);
+  const [currentLocationItem, setCurrentLocationItem] = useState<any>(null);
 
   const fetchLocation = async (query: string) => {
     if (query?.length > 4) {
@@ -45,7 +48,23 @@ const LocationSelection = () => {
     }
   };
 
-  const addLocation = async (id: string) => {
+  const addLocation = async (id: string, item?: any) => {
+    // Handle current location selection
+    if (id === 'current-location' && item?.coordinates) {
+      const data = item.coordinates;
+      if (focusedInput === "drop") {
+        setDrop(data.address);
+        setDropCoords(data);
+      } else {
+        setLocation(data);
+        setPickupCoords(data);
+        setPickup(data.address);
+      }
+      setLocations([]);
+      return;
+    }
+
+    // Handle regular place selection
     const data = await getLatLong(id);
     if (data) {
       if (focusedInput === "drop") {
@@ -60,6 +79,28 @@ const LocationSelection = () => {
   };
 
   const renderLocations = ({ item }: any) => {
+    // Render current location with special styling
+    if (item?.isCurrentLocation) {
+      return (
+        <TouchableOpacity
+          style={[commonStyles.flexRow, locationStyles.container, styles.currentLocationContainer]}
+          onPress={() => addLocation(item.place_id, item)}
+        >
+          <View style={styles.currentLocationIconContainer}>
+            <Ionicons name="locate" size={20} color="#10B981" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <CustomText fontFamily="SemiBold" fontSize={14} style={styles.currentLocationMain}>
+              {item.structured_formatting?.main_text}
+            </CustomText>
+            <CustomText fontFamily="Regular" fontSize={12} style={locationStyles.address}>
+              {item.structured_formatting?.secondary_text}
+            </CustomText>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+    
     return (
       <LocationItem item={item} onPress={() => addLocation(item?.place_id)} />
     );
@@ -120,6 +161,26 @@ const LocationSelection = () => {
     if (location) {
       setPickupCoords(location);
       setPickup(location?.address);
+      
+      // Create current location item for suggestions
+      reverseGeocode(location.latitude, location.longitude).then((address) => {
+        if (address) {
+          setCurrentLocationItem({
+            place_id: 'current-location',
+            description: address || `${location.latitude}, ${location.longitude}`,
+            structured_formatting: {
+              main_text: 'Current Location',
+              secondary_text: address || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`,
+            },
+            isCurrentLocation: true,
+            coordinates: {
+              latitude: location.latitude,
+              longitude: location.longitude,
+              address: address || `${location.latitude}, ${location.longitude}`,
+            }
+          });
+        }
+      });
     }
   }, [location]);
 
@@ -170,7 +231,7 @@ const LocationSelection = () => {
       </View>
 
       <FlatList
-        data={locations}
+        data={currentLocationItem ? [currentLocationItem, ...locations] : locations}
         renderItem={renderLocations}
         keyExtractor={(item: any) => item?.place_id}
         initialNumToRender={5}
@@ -227,5 +288,26 @@ const LocationSelection = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  currentLocationContainer: {
+    backgroundColor: '#F0FDF4',
+    borderLeftWidth: 3,
+    borderLeftColor: '#10B981',
+  },
+  currentLocationIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D1FAE5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  currentLocationMain: {
+    color: '#10B981',
+    fontWeight: '600',
+  },
+});
 
 export default LocationSelection;

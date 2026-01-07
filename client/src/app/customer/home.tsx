@@ -109,12 +109,12 @@ const CustomerHome = () => {
               <Ionicons
                 name="car-outline"
                 size={RFValue(18)}
-                color={activeTab === "rides" ? Colors.text : Colors.textLight}
+                color={activeTab === "rides" ? colors.text : colors.textSecondary}
               />
               <CustomText
                 fontFamily={activeTab === "rides" ? "SemiBold" : "Regular"}
                 fontSize={14}
-                style={[styles.tabText, activeTab === "rides" && styles.activeTabText]}
+                style={[{ color: activeTab === "rides" ? colors.text : colors.textSecondary }, activeTab === "rides" && styles.activeTabText]}
               >
                 Rides
               </CustomText>
@@ -127,12 +127,12 @@ const CustomerHome = () => {
               <Ionicons
                 name="fast-food-outline"
                 size={RFValue(18)}
-                color={activeTab === "eats" ? Colors.text : Colors.textLight}
+                color={activeTab === "eats" ? colors.text : colors.textSecondary}
               />
               <CustomText
                 fontFamily={activeTab === "eats" ? "SemiBold" : "Regular"}
                 fontSize={14}
-                style={[styles.tabText, activeTab === "eats" && styles.activeTabText]}
+                style={[{ color: activeTab === "eats" ? colors.text : colors.textSecondary }, activeTab === "eats" && styles.activeTabText]}
               >
                 Eats
               </CustomText>
@@ -491,11 +491,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   locationName: {
-    color: Colors.text,
+    color: "#1F2937",
     marginBottom: 2,
   },
   locationCity: {
-    color: Colors.textLight,
+    color: "#6B7280",
   },
   sectionHeader: {
     flexDirection: "row",
@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   seeAll: {
-    color: Colors.textLight,
+    color: "#6B7280",
   },
   servicesGrid: {
     flexDirection: "row",
@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   serviceName: {
-    color: Colors.text,
+    color: "#1F2937",
     textAlign: "center",
   },
   promoBanner: {
