@@ -111,7 +111,7 @@ const deliveryServices = [
     id: "package",
     name: "Package",
     iconName: "cube" as const,
-    disabled: true,
+    route: "/customer/selectlocations",
   },
   {
     id: "baby",
