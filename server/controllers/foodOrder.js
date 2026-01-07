@@ -1,13 +1,10 @@
 import FoodOrder from '../models/FoodOrder.js';
 import DeliveryBid from '../models/DeliveryBid.js';
 import Restaurant from '../models/Restaurant.js';
+import MenuItem from '../models/MenuItem.js';
 import User from '../models/User.js';
-import {
-  getRestaurantById as getMockRestaurantById,
-  getMenuItemById as getMockMenuItemById,
-} from '../utils/mockEatsData.js';
 
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -28,12 +25,7 @@ export const createOrder = async (req, res) => {
     const { restaurantId, items, deliveryAddress, paymentMethod, channel } = req.body;
     const customerId = req.user._id;
 
-    let restaurant;
-    if (USE_MOCK_DATA) {
-      restaurant = getMockRestaurantById(restaurantId);
-    } else {
-      restaurant = await Restaurant.findById(restaurantId);
-    }
+    const restaurant = await Restaurant.findById(restaurantId);
 
     if (!restaurant) {
       return res.status(404).json({
@@ -50,10 +42,10 @@ export const createOrder = async (req, res) => {
     }
 
     let itemsTotal = 0;
-    const orderItems = items.map((item) => {
+    const orderItems = await Promise.all(items.map(async (item) => {
       let menuItem;
-      if (USE_MOCK_DATA) {
-        menuItem = getMockMenuItemById(item.menuItemId);
+      if (!USE_MOCK_DATA) {
+        menuItem = await MenuItem.findById(item.menuItemId);
       }
 
       const itemPrice = menuItem ? menuItem.price : item.price;
@@ -69,7 +61,7 @@ export const createOrder = async (req, res) => {
         subtotal,
         specialInstructions: item.specialInstructions,
       };
-    });
+    }));
 
     const deliveryFee = restaurant.deliveryFee || 2;
     const platformFee = itemsTotal * 0.1;

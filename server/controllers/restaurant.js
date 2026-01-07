@@ -1,15 +1,7 @@
 import Restaurant from '../models/Restaurant.js';
 import MenuItem from '../models/MenuItem.js';
-import {
-  mockRestaurants,
-  mockMenuItems,
-  getRestaurantById as getMockRestaurantById,
-  getMenuByRestaurantId as getMockMenuByRestaurantId,
-  searchRestaurants as searchMockRestaurants,
-  filterRestaurants as filterMockRestaurants,
-} from '../utils/mockEatsData.js';
 
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 export const getRestaurants = async (req, res) => {
   try {
