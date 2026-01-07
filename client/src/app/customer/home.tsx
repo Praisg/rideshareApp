@@ -29,10 +29,7 @@ const services = [
   { id: 4, name: "Reserve", icon: require("@/assets/icons/auto.png"), promo: false },
 ];
 
-const recentLocations = [
-  { id: 1, name: "Rd", city: "Austin, TX", saved: false },
-  { id: 2, name: "St", city: "Austin, TX", saved: false },
-];
+// Recent locations are now fetched from userStore
 
 const cuisineIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
   "Fast Food": "fast-food",
@@ -47,7 +44,7 @@ const cuisineIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
 };
 
 const CustomerHome = () => {
-  const { location } = useUserStore();
+  const { location, recentLocations } = useUserStore();
   const { colors } = useThemeStore();
   const [activeTab, setActiveTab] = useState<"rides" | "eats">("rides");
   const [showRideHistory, setShowRideHistory] = useState(false);
@@ -161,27 +158,29 @@ const CustomerHome = () => {
                 </View>
               </TouchableOpacity>
 
-              <View style={styles.section}>
-                {recentLocations.map((loc) => (
-                  <TouchableOpacity
-                    key={loc.id}
-                    style={styles.recentLocation}
-                    onPress={handleServicePress}
-                  >
-                    <View style={styles.locationIcon}>
-                      <Ionicons name="time-outline" size={RFValue(16)} color={Colors.textLight} />
-                    </View>
-                    <View style={styles.locationInfo}>
-                      <CustomText fontFamily="Medium" fontSize={14} style={styles.locationName}>
-                        {loc.name}
-                      </CustomText>
-                      <CustomText fontFamily="Regular" fontSize={12} style={styles.locationCity}>
-                        {loc.city}
-                      </CustomText>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
+              {recentLocations.length > 0 && (
+                <View style={styles.section}>
+                  {recentLocations.slice(0, 3).map((loc) => (
+                    <TouchableOpacity
+                      key={loc.id}
+                      style={styles.recentLocation}
+                      onPress={handleServicePress}
+                    >
+                      <View style={styles.locationIcon}>
+                        <Ionicons name="time-outline" size={RFValue(16)} color={colors.textSecondary} />
+                      </View>
+                      <View style={styles.locationInfo}>
+                        <CustomText fontFamily="Medium" fontSize={14} style={[styles.locationName, { color: colors.text }]}>
+                          {loc.name}
+                        </CustomText>
+                        <CustomText fontFamily="Regular" fontSize={12} style={[styles.locationCity, { color: colors.textSecondary }]}>
+                          {loc.city}
+                        </CustomText>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
 
               <View style={styles.section}>
                 <View style={styles.sectionHeader}>

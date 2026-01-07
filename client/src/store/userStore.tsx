@@ -16,6 +16,16 @@ interface SavedPlace {
   longitude: number;
 }
 
+interface RecentLocation {
+  id: string;
+  name: string;
+  city: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  timestamp: number;
+}
+
 interface UserPreferences {
   notifications: {
     push: boolean;
@@ -34,6 +44,7 @@ interface UserStoreProps {
   location: CustomLocation;
   outOfRange: boolean;
   savedPlaces: SavedPlace[];
+  recentLocations: RecentLocation[];
   preferences: UserPreferences;
   setUser: (data: any) => void;
   setOutOfRange: (data: boolean) => void;
@@ -41,6 +52,7 @@ interface UserStoreProps {
   setSavedPlaces: (places: SavedPlace[]) => void;
   addSavedPlace: (place: SavedPlace) => void;
   removeSavedPlace: (id: string) => void;
+  addRecentLocation: (address: string, latitude: number, longitude: number) => void;
   setPreferences: (prefs: Partial<UserPreferences>) => void;
   clearData: () => void;
 }
@@ -65,6 +77,7 @@ export const useUserStore = create<UserStoreProps>()(
       location: null,
       outOfRange: false,
       savedPlaces: [],
+      recentLocations: [],
       preferences: defaultPreferences,
       setUser: (data) => set({ user: data }),
       setLocation: (data) => set({ location: data }),
@@ -81,6 +94,37 @@ export const useUserStore = create<UserStoreProps>()(
         set((state) => ({
           savedPlaces: state.savedPlaces.filter((p) => p.id !== id),
         })),
+      addRecentLocation: (address, latitude, longitude) =>
+        set((state) => {
+          // Parse address to extract main location and city
+          const parts = address.split(',').map(s => s.trim());
+          const name = parts[0] || address;
+          const city = parts.length > 1 ? parts.slice(-2).join(', ') : 'Unknown';
+          
+          const newLocation: RecentLocation = {
+            id: `${latitude}-${longitude}`,
+            name,
+            city,
+            address,
+            latitude,
+            longitude,
+            timestamp: Date.now(),
+          };
+          
+          // Filter out duplicate locations (within 100m radius)
+          const filteredLocations = state.recentLocations.filter((loc) => {
+            const distance = Math.sqrt(
+              Math.pow(loc.latitude - latitude, 2) + 
+              Math.pow(loc.longitude - longitude, 2)
+            );
+            return distance > 0.001; // ~100m threshold
+          });
+          
+          // Keep only last 5 locations, newest first
+          const updatedLocations = [newLocation, ...filteredLocations].slice(0, 5);
+          
+          return { recentLocations: updatedLocations };
+        }),
       setPreferences: (prefs) =>
         set((state) => ({
           preferences: { ...state.preferences, ...prefs },
@@ -91,6 +135,7 @@ export const useUserStore = create<UserStoreProps>()(
           location: null,
           outOfRange: false,
           savedPlaces: [],
+          recentLocations: [],
           preferences: defaultPreferences,
         }),
     }),
@@ -99,6 +144,7 @@ export const useUserStore = create<UserStoreProps>()(
       partialize: (state) => ({
         user: state.user,
         savedPlaces: state.savedPlaces,
+        recentLocations: state.recentLocations,
         preferences: state.preferences,
       }),
       storage: createJSONStorage(() => mmkvStorage),

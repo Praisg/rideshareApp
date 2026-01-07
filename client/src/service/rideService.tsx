@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import { appAxios } from "./apiInterceptors";
 import { Alert } from "react-native";
 import { resetAndNavigate } from "@/utils/Helpers";
+import { useUserStore } from "@/store/userStore";
 
 interface coords {
   address: string;
@@ -19,6 +20,15 @@ export const createRide = async (payload: {
 }) => {
   try {
     const res = await appAxios.post(`/ride/create`, payload);
+    
+    // Save drop location to recent locations
+    const { addRecentLocation } = useUserStore.getState();
+    addRecentLocation(
+      payload.drop.address,
+      payload.drop.latitude,
+      payload.drop.longitude
+    );
+    
     router?.navigate({
       pathname: "/customer/liveride",
       params: {
