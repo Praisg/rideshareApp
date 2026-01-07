@@ -94,8 +94,8 @@ const CustomerHome = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="dark" backgroundColor={Colors.white} translucent={false} />
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <StatusBar style={colors.background === "#FFFFFF" ? "dark" : "light"} backgroundColor={colors.background} translucent={false} />
       
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
@@ -407,7 +407,6 @@ const CustomerHome = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
   },
   safeArea: {
     flex: 1,
@@ -465,7 +464,7 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    backgroundColor: Colors.white,
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
   },
   section: {
@@ -589,7 +588,7 @@ const styles = StyleSheet.create({
   },
   bottomNav: {
     flexDirection: "row",
-    backgroundColor: Colors.white,
+    backgroundColor: "#FFFFFF",
     borderTopWidth: 1,
     borderTopColor: "#E5E7EB",
     paddingVertical: 8,
@@ -642,7 +641,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 12,
-    backgroundColor: Colors.white,
+    backgroundColor: "#FFFFFF",
     marginBottom: 1,
   },
   restaurantImageContainer: {

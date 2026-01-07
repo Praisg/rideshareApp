@@ -71,8 +71,8 @@ const getThemeColors = (mode: ThemeMode): ThemeColors => {
 export const useThemeStore = create<ThemeStoreProps>()(
   persist(
     (set) => ({
-      mode: "dark",
-      colors: darkTheme,
+      mode: "light",
+      colors: lightTheme,
       setMode: (mode) => {
         const colors = getThemeColors(mode);
         set({ mode, colors });

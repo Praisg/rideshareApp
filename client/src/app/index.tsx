@@ -6,11 +6,12 @@ import { splashStyles } from "@/styles/splashStyles";
 import CustomText from "@/components/shared/CustomText";
 import { useUserStore } from "@/store/userStore";
 import { useRiderStore } from "@/store/riderStore";
-import { tokenStorage } from "@/store/storage";
+import { tokenStorage, isStorageReady } from "@/store/storage";
 import { jwtDecode } from "jwt-decode";
 import { resetAndNavigate } from "@/utils/Helpers";
 import { refresh_tokens } from "@/service/apiInterceptors";
 import { logout } from "@/service/authService";
+import { useThemeStore } from "@/store/themeStore";
 
 interface DecodedToken {
   exp: number;
@@ -29,6 +30,28 @@ const Main = () => {
   const { user: riderUser } = useRiderStore();
 
   const [hasNavigated, setHasNavigated] = useState(false);
+  const [storageReady, setStorageReady] = useState(false);
+
+  // Wait for storage to hydrate theme
+  useEffect(() => {
+    const checkStorage = setInterval(() => {
+      if (isStorageReady()) {
+        setStorageReady(true);
+        clearInterval(checkStorage);
+      }
+    }, 50);
+
+    // Timeout after 2 seconds
+    const timeout = setTimeout(() => {
+      setStorageReady(true);
+      clearInterval(checkStorage);
+    }, 2000);
+
+    return () => {
+      clearInterval(checkStorage);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   const tokenCheck = async () => {
     const onboarding_completed = tokenStorage.getString("onboarding_completed");
@@ -86,14 +109,14 @@ const Main = () => {
   };
 
   useEffect(() => {
-    if (loaded && !hasNavigated) {
+    if (loaded && storageReady && !hasNavigated) {
       const timeoutId = setTimeout(() => {
         tokenCheck();
         setHasNavigated(true);
       }, 1000);
       return () => clearTimeout(timeoutId);
     }
-  }, [loaded, hasNavigated]);
+  }, [loaded, storageReady, hasNavigated]);
 
   return (
     <View style={commonStyles.container}>

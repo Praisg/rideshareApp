@@ -2,8 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const tokenCache: Record<string, string> = {};
 const storageCache: Record<string, string> = {};
+let isStorageInitialized = false;
+let isTokenInitialized = false;
 
-AsyncStorage.multiGet(['token-storage:access_token', 'token-storage:refresh_token']).then(
+// Initialize token cache
+AsyncStorage.multiGet(['token-storage:access_token', 'token-storage:refresh_token', 'token-storage:onboarding_completed']).then(
     (values) => {
         values.forEach(([key, value]) => {
             if (value) {
@@ -11,8 +14,30 @@ AsyncStorage.multiGet(['token-storage:access_token', 'token-storage:refresh_toke
                 tokenCache[shortKey] = value;
             }
         });
+        isTokenInitialized = true;
     }
 );
+
+// Initialize theme storage cache
+AsyncStorage.getAllKeys().then((keys) => {
+    const themeKeys = keys.filter(key => key.startsWith('theme-store'));
+    if (themeKeys.length > 0) {
+        return AsyncStorage.multiGet(themeKeys).then((values) => {
+            values.forEach(([key, value]) => {
+                if (value) {
+                    storageCache[key] = value;
+                }
+            });
+            isStorageInitialized = true;
+        });
+    } else {
+        isStorageInitialized = true;
+    }
+}).catch(() => {
+    isStorageInitialized = true;
+});
+
+export const isStorageReady = () => isStorageInitialized && isTokenInitialized;
 
 export const tokenStorage = {
     set: (key: string, value: string) => {
