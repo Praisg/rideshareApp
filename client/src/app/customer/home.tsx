@@ -20,6 +20,7 @@ import RideHistoryModal from "@/components/shared/RideHistoryModal";
 import { getRestaurants, getCuisines } from "@/service/eatsService";
 import { useEatsStore } from "@/store/eatsStore";
 import { useCartStore } from "@/store/cartStore";
+import { useThemeStore } from "@/store/themeStore";
 
 const services = [
   { id: 1, name: "Ride", icon: require("@/assets/icons/cab.png"), promo: false },
@@ -47,6 +48,7 @@ const cuisineIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
 
 const CustomerHome = () => {
   const { location } = useUserStore();
+  const { colors } = useThemeStore();
   const [activeTab, setActiveTab] = useState<"rides" | "eats">("rides");
   const [showRideHistory, setShowRideHistory] = useState(false);
   
