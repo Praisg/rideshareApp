@@ -400,7 +400,11 @@ const CustomerHome = () => {
         </View>
       </SafeAreaView>
 
-      <RideHistoryModal visible={showRideHistory} onClose={() => setShowRideHistory(false)} />
+      <RideHistoryModal 
+        visible={showRideHistory} 
+        onClose={() => setShowRideHistory(false)}
+        userRole="customer"
+      />
     </View>
   );
 };
