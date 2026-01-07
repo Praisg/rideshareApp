@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,6 +14,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import CustomText from "@/components/shared/CustomText";
 import { screenWidth } from "@/utils/Constants";
 import { useThemeStore } from "@/store/themeStore";
+import RideHistoryModal from "@/components/shared/RideHistoryModal";
 
 const rideServices = [
   {
@@ -201,6 +202,7 @@ const ServiceTile = ({
 
 const ServicesScreen = () => {
   const { colors } = useThemeStore();
+  const [showRideHistory, setShowRideHistory] = useState(false);
 
   const handleServicePress = (service: { route?: string; disabled?: boolean }) => {
     if (service.disabled) return;
@@ -208,6 +210,10 @@ const ServicesScreen = () => {
       router.push(service.route as any);
     }
   };
+
+  // Filter out disabled services
+  const activeRideServices = rideServices.filter(service => !service.disabled);
+  const activeDeliveryServices = deliveryServices.filter(service => !service.disabled);
 
   const dynamicStyles = StyleSheet.create({
     container: {
@@ -296,7 +302,7 @@ const ServicesScreen = () => {
 
           <View style={styles.section}>
             <View style={styles.servicesGrid}>
-              {rideServices.map((service) => (
+              {activeRideServices.map((service) => (
                 <ServiceTile
                   key={service.id}
                   item={service}
@@ -315,7 +321,7 @@ const ServicesScreen = () => {
             </CustomText>
             
             <View style={styles.servicesGrid}>
-              {deliveryServices.map((service) => (
+              {activeDeliveryServices.map((service) => (
                 <ServiceTile
                   key={service.id}
                   item={service}
@@ -342,7 +348,7 @@ const ServicesScreen = () => {
             </CustomText>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navItem} onPress={() => router.push("/customer/home")}>
+          <TouchableOpacity style={styles.navItem} onPress={() => setShowRideHistory(true)}>
             <Ionicons name="receipt-outline" size={RFValue(22)} color={colors.textSecondary} />
             <CustomText fontFamily="Regular" fontSize={10} style={dynamicStyles.navText}>
               Activity
@@ -359,6 +365,12 @@ const ServicesScreen = () => {
             </CustomText>
           </TouchableOpacity>
         </View>
+
+        <RideHistoryModal 
+          visible={showRideHistory} 
+          onClose={() => setShowRideHistory(false)}
+          userRole="customer"
+        />
       </SafeAreaView>
     </View>
   );

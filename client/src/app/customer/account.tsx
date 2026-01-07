@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,11 +16,13 @@ import { useUserStore } from "@/store/userStore";
 import { logout } from "@/service/authService";
 import { useWS } from "@/service/WSProvider";
 import { useThemeStore } from "@/store/themeStore";
+import RideHistoryModal from "@/components/shared/RideHistoryModal";
 
 const AccountScreen = () => {
   const { user } = useUserStore();
   const { disconnect } = useWS();
   const { colors } = useThemeStore();
+  const [showRideHistory, setShowRideHistory] = useState(false);
 
   const handleLogout = () => {
     Alert.alert(
@@ -34,6 +36,14 @@ const AccountScreen = () => {
           onPress: () => logout(disconnect),
         },
       ]
+    );
+  };
+
+  const showComingSoon = (feature: string) => {
+    Alert.alert(
+      "Coming Soon",
+      `${feature} feature will be available in a future update.`,
+      [{ text: "OK", style: "default" }]
     );
   };
 
@@ -213,7 +223,7 @@ const AccountScreen = () => {
           </TouchableOpacity>
 
           <View style={styles.quickActions}>
-            <TouchableOpacity style={dynamicStyles.quickAction}>
+            <TouchableOpacity style={dynamicStyles.quickAction} onPress={() => showComingSoon("Help")}>
               <View style={styles.quickActionIcon}>
                 <Ionicons name="help-circle" size={RFValue(24)} color={colors.text} />
               </View>
@@ -222,7 +232,7 @@ const AccountScreen = () => {
               </CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={dynamicStyles.quickAction}>
+            <TouchableOpacity style={dynamicStyles.quickAction} onPress={() => showComingSoon("Wallet")}>
               <View style={styles.quickActionIcon}>
                 <Ionicons name="wallet" size={RFValue(24)} color={colors.text} />
               </View>
@@ -231,7 +241,7 @@ const AccountScreen = () => {
               </CustomText>
             </TouchableOpacity>
 
-            <TouchableOpacity style={dynamicStyles.quickAction}>
+            <TouchableOpacity style={dynamicStyles.quickAction} onPress={() => setShowRideHistory(true)}>
               <View style={styles.quickActionIcon}>
                 <Ionicons name="car" size={RFValue(24)} color={colors.text} />
               </View>
@@ -266,12 +276,12 @@ const AccountScreen = () => {
             <MenuItem
               iconName="gift"
               title="Send a gift"
-              onPress={() => {}}
+              onPress={() => showComingSoon("Send a gift")}
             />
             <MenuItem
               iconName="megaphone"
               title="Promotions"
-              onPress={() => {}}
+              onPress={() => showComingSoon("Promotions")}
             />
           </View>
 
@@ -279,12 +289,12 @@ const AccountScreen = () => {
             <MenuItem
               iconName="briefcase"
               title="Set up your business profile"
-              onPress={() => {}}
+              onPress={() => showComingSoon("Business profile")}
             />
             <MenuItem
               iconName="car-sport"
               title="Drive or deliver with RIDE"
-              onPress={() => {}}
+              onPress={() => showComingSoon("Driver sign-up")}
             />
           </View>
 
@@ -297,7 +307,7 @@ const AccountScreen = () => {
             <MenuItem
               iconName="chatbubble"
               title="Messages"
-              onPress={() => {}}
+              onPress={() => showComingSoon("Messages")}
             />
           </View>
 
@@ -340,7 +350,7 @@ const AccountScreen = () => {
             </CustomText>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.navItem} onPress={() => router.push("/customer/home")}>
+          <TouchableOpacity style={styles.navItem} onPress={() => setShowRideHistory(true)}>
             <Ionicons name="receipt-outline" size={RFValue(22)} color={colors.textSecondary} />
             <CustomText fontFamily="Regular" fontSize={10} style={dynamicStyles.navText}>
               Activity
@@ -357,6 +367,12 @@ const AccountScreen = () => {
             </CustomText>
           </TouchableOpacity>
         </View>
+
+        <RideHistoryModal 
+          visible={showRideHistory} 
+          onClose={() => setShowRideHistory(false)}
+          userRole="customer"
+        />
       </SafeAreaView>
     </View>
   );
