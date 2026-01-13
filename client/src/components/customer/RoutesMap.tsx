@@ -86,11 +86,12 @@ const RoutesMap: FC<{ drop: any; pickup: any }> = ({ drop, pickup }) => {
             origin={pickup}
             destination={drop}
             apikey={apiKey}
-            strokeWidth={5}
+            strokeWidth={6}
             precision="high"
             onReady={() => fitToMarkersWithDelay()}
-            strokeColor="#D2D2D2"
-            strokeColors={["#D2D2D2"]}
+            strokeColor="#1A1A1A"
+            strokeColors={["#1A1A1A"]}
+            lineDashPattern={[0]}
             onError={(err) => console.log("Directions Error", err)}
           />
         )}

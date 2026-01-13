@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Alert, Keyboard } from "react-native";
-import React, { memo, useCallback, useMemo, useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Alert, Keyboard, Modal, Animated, StyleSheet } from "react-native";
+import React, { memo, useCallback, useMemo, useState, useRef, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import { useUserStore } from "@/store/userStore";
 import { rideStyles } from "@/styles/rideStyles";
@@ -22,6 +22,8 @@ const RideBooking = () => {
   const [selectedOption, setSelectedOption] = useState("Bike");
   const [loading, setLoading] = useState(false);
   const [proposedPrice, setProposedPrice] = useState("");
+  const [showOfferSheet, setShowOfferSheet] = useState(false);
+  const slideAnim = useRef(new Animated.Value(0)).current;
 
   const farePrices = useMemo(
     () => calculateFare(parseFloat(item?.distanceInKm)),
@@ -81,7 +83,27 @@ const RideBooking = () => {
 
   const handleOptionSelect = useCallback((type: string) => {
     setSelectedOption(type);
-  }, []);
+    // Auto-open offer sheet when vehicle is selected
+    if (!showOfferSheet) {
+      setShowOfferSheet(true);
+    }
+  }, [showOfferSheet]);
+
+  useEffect(() => {
+    if (showOfferSheet) {
+      Animated.spring(slideAnim, {
+        toValue: 1,
+        useNativeDriver: true,
+        tension: 50,
+        friction: 8,
+      }).start();
+    } else {
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [showOfferSheet]);
 
   const handleRideBooking = async () => {
     const price = parseFloat(proposedPrice);
@@ -165,7 +187,7 @@ const RideBooking = () => {
 
   return (
     <View style={rideStyles.container}>
-      <StatusBar style="light" backgroundColor="orange" translucent={false} />
+      <StatusBar style="dark" backgroundColor="white" translucent={false} />
 
       {item?.drop_latitude && location?.latitude && (
         <RoutesMap
@@ -180,24 +202,26 @@ const RideBooking = () => {
         />
       )}
 
-      <View style={rideStyles.rideSelectionContainer}>
-        {farePrices?.surgeMultiplier > 1 ? (
-          <View style={[rideStyles?.offerContainer, { backgroundColor: '#FFE5E5' }]}>
-            <CustomText fontSize={12} style={[rideStyles.offerText, { color: '#D32F2F' }]}>
-              High demand! Prices are {farePrices.surgeMultiplier}x higher than usual
-            </CustomText>
-          </View>
-        ) : (
-          <View style={rideStyles?.offerContainer}>
-            <CustomText fontSize={12} style={rideStyles.offerText}>
-              You get $10 off 5 coins cashback!
+      {/* Vehicle Selection Bottom Sheet - Always Visible */}
+      <View style={styles.vehicleBottomSheet}>
+        {/* Surge Warning - Only show if surge is active */}
+        {farePrices?.surgeMultiplier > 1 && (
+          <View style={styles.surgeWarning}>
+            <Ionicons name="flash" size={16} color="#D32F2F" />
+            <CustomText fontSize={11} style={{ color: '#D32F2F', marginLeft: 6 }}>
+              High demand! Prices are {farePrices.surgeMultiplier}x higher
             </CustomText>
           </View>
         )}
 
+        <CustomText fontFamily="SemiBold" fontSize={16} style={styles.sectionTitle}>
+          Choose a ride
+        </CustomText>
+
         <ScrollView
-          contentContainerStyle={rideStyles?.scrollContainer}
+          style={styles.vehicleScrollView}
           showsVerticalScrollIndicator={false}
+          bounces={false}
         >
           {rideOptions?.map((ride, index) => (
             <RideOption
@@ -207,9 +231,11 @@ const RideBooking = () => {
               onSelect={handleOptionSelect}
             />
           ))}
+          <View style={{ height: 20 }} />
         </ScrollView>
       </View>
 
+      {/* Back Button */}
       <TouchableOpacity
         style={rideStyles.backButton}
         onPress={() => router.back()}
@@ -222,79 +248,123 @@ const RideBooking = () => {
         />
       </TouchableOpacity>
 
-      <View style={rideStyles.bookingContainer}>
-        <View style={{ padding: 15, backgroundColor: '#F8F9FA', borderRadius: 10, marginBottom: 15 }}>
-          <CustomText fontFamily="SemiBold" fontSize={14} style={{ marginBottom: 8 }}>
-            Your Offer
-          </CustomText>
-          
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-            <View style={{ flex: 1, marginRight: 10 }}>
-              <TextInput
-                value={proposedPrice}
-                onChangeText={setProposedPrice}
-                placeholder={`$${priceRange.suggested.toFixed(2)}`}
-                keyboardType="decimal-pad"
-                returnKeyType="done"
-                blurOnSubmit={true}
-                onSubmitEditing={() => Keyboard.dismiss()}
-                style={{
-                  backgroundColor: Colors.white,
-                  borderRadius: 8,
-                  paddingHorizontal: 15,
-                  paddingVertical: 12,
-                  fontSize: RFValue(16),
-                  fontFamily: 'Bold',
-                  borderWidth: 2,
-                  borderColor: proposedPrice ? Colors.primary : '#E5E7EB',
-                }}
-                placeholderTextColor="#9CA3AF"
+      {/* Your Offer Modal - Slides up when vehicle selected */}
+      <Modal
+        visible={showOfferSheet}
+        transparent
+        animationType="none"
+        onRequestClose={() => setShowOfferSheet(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowOfferSheet(false)}
+        >
+          <Animated.View
+            style={[
+              styles.offerSheet,
+              {
+                transform: [
+                  {
+                    translateY: slideAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [600, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}
+            onStartShouldSetResponder={() => true}
+          >
+            {/* Drag Handle */}
+            <View style={styles.dragHandle} />
+
+            <View style={styles.offerSheetContent}>
+              <View style={styles.offerHeader}>
+                <CustomText fontFamily="SemiBold" fontSize={18}>
+                  Make Your Offer
+                </CustomText>
+                <TouchableOpacity onPress={() => setShowOfferSheet(false)}>
+                  <Ionicons name="close" size={24} color="#666" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.selectedVehicleInfo}>
+                <CustomText fontSize={12} style={{ color: '#666', marginBottom: 4 }}>
+                  Selected Vehicle
+                </CustomText>
+                <CustomText fontFamily="Medium" fontSize={14}>
+                  {selectedOption} • {rideOptions.find(r => r.type === selectedOption)?.time}
+                </CustomText>
+              </View>
+
+              <View style={styles.priceInputContainer}>
+                <CustomText fontFamily="Medium" fontSize={14} style={{ marginBottom: 10 }}>
+                  Your Offer Price
+                </CustomText>
+
+                <View style={styles.priceInputRow}>
+                  <View style={{ flex: 1, marginRight: 10 }}>
+                    <TextInput
+                      value={proposedPrice}
+                      onChangeText={setProposedPrice}
+                      placeholder={`$${priceRange.suggested.toFixed(2)}`}
+                      keyboardType="decimal-pad"
+                      returnKeyType="done"
+                      blurOnSubmit={true}
+                      onSubmitEditing={() => Keyboard.dismiss()}
+                      style={styles.priceInput}
+                      placeholderTextColor="#9CA3AF"
+                    />
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setProposedPrice(priceRange.suggested.toString());
+                      Keyboard.dismiss();
+                    }}
+                    style={styles.suggestedButton}
+                  >
+                    <CustomText fontFamily="Medium" fontSize={11} style={{ color: Colors.white }}>
+                      Use Suggested
+                    </CustomText>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.priceRangeInfo}>
+                  <View style={styles.priceRangeItem}>
+                    <CustomText fontSize={10} style={{ color: '#9CA3AF' }}>Min</CustomText>
+                    <CustomText fontSize={11} fontFamily="Medium">${priceRange.min.toFixed(2)}</CustomText>
+                  </View>
+                  <View style={styles.priceRangeItem}>
+                    <CustomText fontSize={10} style={{ color: '#9CA3AF' }}>Suggested</CustomText>
+                    <CustomText fontSize={11} fontFamily="Medium" style={{ color: Colors.primary }}>
+                      ${priceRange.suggested.toFixed(2)}
+                    </CustomText>
+                  </View>
+                  <View style={styles.priceRangeItem}>
+                    <CustomText fontSize={10} style={{ color: '#9CA3AF' }}>Max</CustomText>
+                    <CustomText fontSize={11} fontFamily="Medium">${priceRange.max.toFixed(2)}</CustomText>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.infoBox}>
+                <Ionicons name="information-circle" size={18} color="#856404" />
+                <CustomText fontSize={10} style={{ color: '#856404', marginLeft: 8, flex: 1 }}>
+                  Drivers will see your offer and can accept or counter with their price
+                </CustomText>
+              </View>
+
+              <CustomButton
+                title="Propose Price & Find Drivers"
+                disabled={loading}
+                loading={loading}
+                onPress={handleRideBooking}
               />
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                setProposedPrice(priceRange.suggested.toString());
-                Keyboard.dismiss();
-              }}
-              style={{
-                backgroundColor: Colors.primary,
-                paddingHorizontal: 12,
-                paddingVertical: 12,
-                borderRadius: 8,
-              }}
-            >
-              <CustomText fontFamily="Medium" fontSize={10} style={{ color: Colors.white }}>
-                Suggested
-              </CustomText>
-            </TouchableOpacity>
-          </View>
-
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-            <CustomText fontSize={10} style={{ color: '#6B7280' }}>
-              Min: ${priceRange.min.toFixed(2)}
-            </CustomText>
-            <CustomText fontSize={10} style={{ color: '#6B7280' }}>
-              Suggested: ${priceRange.suggested.toFixed(2)}
-            </CustomText>
-            <CustomText fontSize={10} style={{ color: '#6B7280' }}>
-              Max: ${priceRange.max.toFixed(2)}
-            </CustomText>
-          </View>
-
-          <View style={{ marginTop: 10, padding: 10, backgroundColor: '#FFF3CD', borderRadius: 6 }}>
-            <CustomText fontSize={9} style={{ color: '#856404', textAlign: 'center' }}>
-              💡 Drivers will see your offer and can accept or counter-offer with their price
-            </CustomText>
-          </View>
-        </View>
-
-        <CustomButton
-          title="Propose Price & Find Drivers"
-          disabled={loading}
-          loading={loading}
-          onPress={handleRideBooking}
-        />
-      </View>
+          </Animated.View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
@@ -303,37 +373,209 @@ const RideOption = memo(({ ride, selected, onSelect }: any) => (
   <TouchableOpacity
     onPress={() => onSelect(ride?.type)}
     style={[
-      rideStyles.rideOption,
-      { borderColor: selected === ride.type ? "#222" : "#ddd" },
+      styles.rideOptionCard,
+      selected === ride.type && styles.rideOptionSelected,
     ]}
   >
-    <View style={commonStyles.flexRowBetween}>
-      <Image source={ride?.icon} style={rideStyles?.rideIcon} />
+    <View style={styles.rideOptionContent}>
+      <Image source={ride?.icon} style={styles.rideOptionIcon} />
 
-      <View style={rideStyles?.rideDetails}>
-        <CustomText fontFamily="Medium" fontSize={12}>
-          {ride?.type}{" "}
+      <View style={styles.rideOptionDetails}>
+        <View style={styles.rideOptionHeader}>
+          <CustomText fontFamily="SemiBold" fontSize={13}>
+            {ride?.type}
+          </CustomText>
           {ride?.isFastest && (
-            <Text style={rideStyles.fastestLabel}>FASTEST</Text>
+            <View style={styles.fastestBadge}>
+              <Ionicons name="flash" size={10} color={Colors.primary} />
+              <Text style={styles.fastestText}>FASTEST</Text>
+            </View>
           )}
+        </View>
+        <CustomText fontSize={11} style={{ color: '#6B7280', marginTop: 2 }}>
+          {ride?.seats} {ride?.seats === 1 ? 'seat' : 'seats'} • {ride?.time} away
         </CustomText>
-        <CustomText fontSize={10}>
-          {ride?.seats} seats • {ride?.time} away • Drop {ride?.dropTime}
+        <CustomText fontSize={10} style={{ color: '#9CA3AF', marginTop: 1 }}>
+          Drop-off: {ride?.dropTime}
         </CustomText>
       </View>
 
-      <View style={rideStyles?.priceContainer}>
-        <CustomText fontFamily="Medium" fontSize={14}>
+      <View style={styles.rideOptionPrice}>
+        <CustomText fontFamily="Bold" fontSize={16}>
           ${ride?.price?.toFixed(2)}
         </CustomText>
-        {selected === ride.type && (
-          <Text style={rideStyles?.discountedPrice}>
-            ${Number(ride?.price + 10).toFixed(2)}
-          </Text>
-        )}
       </View>
     </View>
   </TouchableOpacity>
 ));
+
+const styles = StyleSheet.create({
+  vehicleBottomSheet: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: 20,
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+    maxHeight: '50%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  surgeWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFE5E5',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    marginBottom: 16,
+    color: '#111',
+  },
+  vehicleScrollView: {
+    flex: 1,
+  },
+  rideOptionCard: {
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  rideOptionSelected: {
+    borderColor: '#000',
+    backgroundColor: '#F9FAFB',
+  },
+  rideOptionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rideOptionIcon: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+    marginRight: 12,
+  },
+  rideOptionDetails: {
+    flex: 1,
+  },
+  rideOptionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  fastestBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF3E5',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  fastestText: {
+    color: Colors.primary,
+    fontSize: 9,
+    fontWeight: '700',
+    marginLeft: 2,
+  },
+  rideOptionPrice: {
+    alignItems: 'flex-end',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  offerSheet: {
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingBottom: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 20,
+  },
+  dragHandle: {
+    width: 40,
+    height: 5,
+    backgroundColor: '#D1D5DB',
+    borderRadius: 3,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  offerSheetContent: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+  },
+  offerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  selectedVehicleInfo: {
+    backgroundColor: '#F3F4F6',
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 20,
+  },
+  priceInputContainer: {
+    marginBottom: 16,
+  },
+  priceInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  priceInput: {
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: RFValue(18),
+    fontWeight: '700',
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+  },
+  suggestedButton: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  priceRangeInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+  },
+  priceRangeItem: {
+    alignItems: 'center',
+  },
+  infoBox: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF3CD',
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+});
 
 export default memo(RideBooking);
